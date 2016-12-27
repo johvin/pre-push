@@ -6,13 +6,13 @@ var fs = require('fs')
   , prepush = path.resolve(__dirname, '../..', '.git', 'hooks', 'pre-push');
 
 //
-// Bail out if we don't have pre-commit file, it might be removed manually.
+// Bail out if we don't have pre-push file, it might be removed manually.
 //
 if (!exists(prepush)) return;
 
 //
-// If we don't have an old file, we should just remove the pre-commit hook. But
-// if we do have an old prepush file we want to restore that.
+// If we don't have an old file, we should just remove the pre-push hook. But
+// if we do have an old prepus  h file we want to restore that.
 //
 if (!exists(prepush +'.old')) {
   fs.unlinkSync(prepush);
