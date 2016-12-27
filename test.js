@@ -228,7 +228,9 @@ describe('pre-push', function () {
 
   describe('#run', function () {
     it('runs the specified scripts and exit with 0 on no error', function (next) {
+      this.timeout(4000);
       var hook = new Hook(function (code, lines) {
+        console.log('aaaa', code, lines)
         assume(code).equals(0);
         assume(lines).is.undefined();
 
@@ -240,6 +242,7 @@ describe('pre-push', function () {
     });
 
     it('runs the specified test and exits with 1 on error', function (next) {
+      this.timeout(4000);
       var hook = new Hook(function (code, lines) {
         assume(code).equals(1);
 
