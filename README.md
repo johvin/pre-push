@@ -5,7 +5,7 @@
 [version]: http://img.shields.io/npm/v/pre-push2.svg?style=flat-square
 [build]: http://img.shields.io/travis/johvin/pre-push2/master.svg?style=flat-square
 [david]: https://img.shields.io/david/observing/pre-push2.svg?style=flat-square
-[cover]: http://img.shields.io/coveralls/observing/pre-push2/master.svg?style=flat-square
+[cover]: http://img.shields.io/coveralls/johvin/pre-push2/master.svg?style=flat-square
 
 **pre-push2** is a pre-push hook installer for `git`. It will ensure that
 your specified scripts passes before you can commit your
