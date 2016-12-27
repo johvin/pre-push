@@ -13,12 +13,12 @@ var fs = require('fs')
 //
 // Gather the location of the possible hidden .git directory, the hooks
 // directory which contains all git hooks and the absolute location of the
-// `pre-commit` file. The path needs to be absolute in order for the symlinking
+// `pre-push` file. The path needs to be absolute in order for the symlinking
 // to work correctly.
 //
 var git = path.resolve(root, '.git')
   , hooks = path.resolve(git, 'hooks')
-  , precommit = path.resolve(hooks, 'pre-commit');
+  , prepush = path.resolve(hooks, 'pre-push');
 
 //
 // Bail out if we don't have an `.git` directory as the hooks will not get
@@ -28,35 +28,35 @@ if (!exists(git) || !fs.lstatSync(git).isDirectory()) return;
 if (!exists(hooks)) fs.mkdirSync(hooks);
 
 //
-// If there's an existing `pre-commit` hook we want to back it up instead of
+// If there's an existing `pre-push` hook we want to back it up instead of
 // overriding it and losing it completely as it might contain something
 // important.
 //
-if (exists(precommit) && !fs.lstatSync(precommit).isSymbolicLink()) {
-  console.log('pre-commit:');
-  console.log('pre-commit: Detected an existing git pre-commit hook');
-  fs.writeFileSync(precommit +'.old', fs.readFileSync(precommit));
-  console.log('pre-commit: Old pre-commit hook backuped to pre-commit.old');
-  console.log('pre-commit:');
+if (exists(prepush) && !fs.lstatSync(prepush).isSymbolicLink()) {
+  console.log('pre-push:');
+  console.log('pre-push: Detected an existing git pre-push hook');
+  fs.writeFileSync(prepush +'.old', fs.readFileSync(prepush));
+  console.log('pre-push: Old pre-push hook backuped to pre-push.old');
+  console.log('pre-push:');
 }
 
 //
 // We cannot create a symlink over an existing file so make sure it's gone and
 // finish the installation process.
 //
-try { fs.unlinkSync(precommit); }
+try { fs.unlinkSync(prepush); }
 catch (e) {}
 
-// Create generic precommit hook that launches this modules hook (as well
+// Create generic prepush hook that launches this modules hook (as well
 // as stashing - unstashing the unstaged changes)
-// TODO: we could keep launching the old pre-commit scripts
+// TODO: we could keep launching the old pre-push scripts
 var hookRelativeUnixPath = hook.replace(root, '.');
 
 if(os.platform() === 'win32') {
   hookRelativeUnixPath = hookRelativeUnixPath.replace(/[\\\/]+/g, '/');
 }
 
-var precommitContent = '#!/bin/bash' + os.EOL
+var prepushContent = '#!/bin/bash' + os.EOL
   +  hookRelativeUnixPath + os.EOL
   + 'RESULT=$?' + os.EOL
   + '[ $RESULT -ne 0 ] && exit 1' + os.EOL
@@ -67,19 +67,19 @@ var precommitContent = '#!/bin/bash' + os.EOL
 // installation of this module to completely fail. We should just output the
 // error instead destroying the whole npm install process.
 //
-try { fs.writeFileSync(precommit, precommitContent); }
+try { fs.writeFileSync(prepush, prepushContent); }
 catch (e) {
-  console.error('pre-commit:');
-  console.error('pre-commit: Failed to create the hook file in your .git/hooks folder because:');
-  console.error('pre-commit: '+ e.message);
-  console.error('pre-commit: The hook was not installed.');
-  console.error('pre-commit:');
+  console.error('pre-push:');
+  console.error('pre-push: Failed to create the hook file in your .git/hooks folder because:');
+  console.error('pre-push: '+ e.message);
+  console.error('pre-push: The hook was not installed.');
+  console.error('pre-push:');
 }
 
-try { fs.chmodSync(precommit, '777'); }
+try { fs.chmodSync(prepush, '777'); }
 catch (e) {
-  console.error('pre-commit:');
-  console.error('pre-commit: chmod 0777 the pre-commit file in your .git/hooks folder because:');
-  console.error('pre-commit: '+ e.message);
-  console.error('pre-commit:');
+  console.error('pre-push:');
+  console.error('pre-push: chmod 0777 the pre-push file in your .git/hooks folder because:');
+  console.error('pre-push: '+ e.message);
+  console.error('pre-push:');
 }

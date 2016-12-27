@@ -19,7 +19,7 @@ function Hook(fn, options) {
   options = options || {};
 
   this.options = options;     // Used for testing only. Ignore this. Don't touch.
-  this.config = {};           // pre-commit configuration from the `package.json`.
+  this.config = {};           // pre-push configuration from the `package.json`.
   this.json = {};             // Actual content of the `package.json`.
   this.npm = '';              // The location of the `npm` binary.
   this.git = '';              // The location of the `git` binary.
@@ -77,15 +77,15 @@ Hook.prototype.exec = function exec(bin, args) {
  * @api private
  */
 Hook.prototype.parse = function parse() {
-  var pre = this.json['pre-commit'] || this.json.precommit
+  var pre = this.json['pre-push'] || this.json.prepush
     , config = !Array.isArray(pre) && 'object' === typeof pre ? pre : {};
 
-  ['silent', 'colors', 'template'].forEach(function each(flag) {
+  ['silent', 'colors'].forEach(function each(flag) {
     var value;
 
     if (flag in config) value = config[flag];
-    else if ('precommit.'+ flag in this.json) value = this.json['precommit.'+ flag];
-    else if ('pre-commit.'+ flag in this.json) value = this.json['pre-commit.'+ flag];
+    else if ('prepush.'+ flag in this.json) value = this.json['prepush.'+ flag];
+    else if ('pre-push.'+ flag in this.json) value = this.json['pre-push.'+ flag];
     else return;
 
     config[flag] = value;
@@ -121,8 +121,8 @@ Hook.prototype.log = function log(lines, exit) {
   if ('number' !== typeof exit) exit = 1;
 
   var prefix = this.colors
-  ? '\u001b[38;5;166mpre-commit:\u001b[39;49m '
-  : 'pre-commit: ';
+  ? '\u001b[38;5;166mpre-push:\u001b[39;49m '
+  : 'pre-push: ';
 
   lines.push('');     // Whitespace at the end of the log.
   lines.unshift('');  // Whitespace at the beginning.
@@ -142,7 +142,7 @@ Hook.prototype.log = function log(lines, exit) {
 
 /**
  * Initialize all the values of the constructor to see if we can run as an
- * pre-commit hook.
+ * pre-push hook.
  *
  * @api private
  */
@@ -190,15 +190,6 @@ Hook.prototype.initialize = function initialize() {
   //
   if (!this.status.length && !this.options.ignorestatus) {
     return this.log(Hook.log.empty, 0);
-  }
-
-  //
-  // If we have a git template we should configure it before checking for
-  // scripts so it will still be applied even if we don't have anything to
-  // execute.
-  //
-  if (this.config.template) {
-    this.exec(this.git, ['config', 'commit.template', this.config.template]);
   }
 
   if (!this.config.run) return this.log(Hook.log.run, 0);
@@ -255,22 +246,22 @@ Hook.prototype.format = util.format;
 Hook.log = {
   binary: [
     'Failed to locate the `%s` binary, make sure it\'s installed in your $PATH.',
-    'Skipping the pre-commit hook.'
+    'Skipping the pre-push hook.'
   ].join('\n'),
 
   status: [
     'Failed to retrieve the `git status` from the project.',
-    'Skipping the pre-commit hook.'
+    'Skipping the pre-push hook.'
   ].join('\n'),
 
   root: [
     'Failed to find the root of this git repository, cannot locate the `package.json`.',
-    'Skipping the pre-commit hook.'
+    'Skipping the pre-push hook.'
   ].join('\n'),
 
   empty: [
     'No changes detected.',
-    'Skipping the pre-commit hook.'
+    'Skipping the pre-push hook.'
   ].join('\n'),
 
   json: [
@@ -278,19 +269,19 @@ Hook.log = {
     '',
     '  %s',
     '',
-    'Skipping the pre-commit hook.'
+    'Skipping the pre-push hook.'
   ].join('\n'),
 
   run: [
-    'We have nothing pre-commit hooks to run. Either you\'re missing the `scripts`',
-    'in your `package.json` or have configured pre-commit to run nothing.',
-    'Skipping the pre-commit hook.'
+    'We have nothing pre-push hooks to run. Either you\'re missing the `scripts`',
+    'in your `package.json` or have configured pre-push to run nothing.',
+    'Skipping the pre-push hook.'
   ].join('\n'),
 
   failure: [
-    'We\'ve failed to pass the specified git pre-commit hooks as the `%s`',
+    'We\'ve failed to pass the specified git pre-push hooks as the `%s`',
     'hook returned an exit code (%d). If you\'re feeling adventurous you can',
-    'skip the git pre-commit hooks by adding the following flags to your commit:',
+    'skip the git pre-push hooks by adding the following flags to your commit:',
     '',
     '  git commit -n (or --no-verify)',
     '',
