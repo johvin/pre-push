@@ -1,10 +1,10 @@
 # pre-push2
 
-[![Version npm][version]](http://browsenpm.org/package/pre-push2)[![Build Status][build]](https://travis-ci.org/johvin/pre-push2)[![Dependencies][david]](https://david-dm.org/observing/pre-push2)[![Coverage Status][cover]](https://coveralls.io/github/johvin/pre-push2?branch=master)
+[![Version npm][version]](http://browsenpm.org/package/pre-push2)[![Build Status][build]](https://travis-ci.org/johvin/pre-push2)[![Dependencies][david]](https://david-dm.org/johvin/pre-push2)[![Coverage Status][cover]](https://coveralls.io/github/johvin/pre-push2?branch=master)
 
 [version]: http://img.shields.io/npm/v/pre-push2.svg?style=flat-square
 [build]: http://img.shields.io/travis/johvin/pre-push2/master.svg?style=flat-square
-[david]: https://img.shields.io/david/observing/pre-push2.svg?style=flat-square
+[david]: https://img.shields.io/david/johvin/pre-push2.svg?style=flat-square
 [cover]: http://img.shields.io/coveralls/johvin/pre-push2/master.svg?style=flat-square
 
 **pre-push2** is a pre-push hook installer for `git`. It will ensure that
